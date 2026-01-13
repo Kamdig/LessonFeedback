@@ -6,7 +6,7 @@ Detta dokument beskriver de regler och processer vi följer i projektet för att
 Vi använder Trello som vår centrala lla gällande arbetsuppgifter.
 * **Backlog:** Alla framtida idéer och krav.
 * **Sprint Backlog (Todo):** Uppgifter vi har lovat att genomföra i nuvarande sprint.
-* **In Progress:** Här ligger kortet när man börjar ko F�rdela kortet i gruppen så att alla f�r m�jligheten att vara delaktiga. 
+* **In Progress:** Här ligger kortet när man börjar ko F?rdela kortet i gruppen så att alla f?r m?jligheten att vara delaktiga.
 * **Review:** Här hamnar uppgifter när en Pull Request (PR) har skapats.
 * **Done:** Uppgiften flyttas hit först när den uppfyller vår "Definition of Done".
 
@@ -14,7 +14,8 @@ Vi använder Trello som vår centrala lla gällande arbetsuppgifter.
 Vi arbetar med en strukturerad branching-modell för att hålla `main` stabil.
 * **Main:** Innehåller endast kod som är redo för produktion/hårdvara.
 * **Develop:** Vår huvudsakliga arbetsbranch där features integreras.
-* **Feature branches:** Vi separerar p� main med en extra branch som skapas utifr�n 'develop'. Varje task/kort på Trello får en egen branch som skapas utifrån `develop`.
+* **Feature branches:** Vi separerar p? main med en extra branch som skapas utifr?n 'develop'. Varje task/kort på Trello får en egen branch som skapas utifrån `developp
+`.
   * Namngivning: `feat/beskrivning-av-task` (t.ex. `feat/voting-logic`).
 * **Merge:** Ingen kod mergas direkt till `develop`. Det sker via en Pull Request på GitHub.
 
