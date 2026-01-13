@@ -24,16 +24,17 @@ Syftet med denna policy är att säkerställa att koden är enhetlig, lättläst
 
 ### 3.1. Namngivning (Naming Conventions)
 För att undvika krockar och öka tydligheten använder vi följande prefix och stilar:
-* Filer: Använd snake_case. Hårdvarunära filer prefixas med drivrutinsnamn (t.ex. led_driver.c), logikfiler med modulnamn (t.ex. vote_logic.c).
-* Funktioner: modulnamn_funktions_namn() (t.ex. vote_register_increment()).
-* Variabler: snake_case (t.ex. button_press_count).
-* Konstanter/Macros: SCREAMING_SNAKE_CASE (t.ex. MAX_VOTES_PER_SESSION).* Typer (Structs/Enums): Slutar på _t (t.ex. vote_state_t).
+* **Filer:** Använd snake_case. Hårdvarunära filer prefixas med drivrutinsnamn (t.ex. led_driver.c), logikfiler med modulnamn (t.ex. vote_logic.c).
+* **Funktioner:** modulnamn_funktions_namn() (t.ex. vote_register_increment()).
+* **Variabler:** snake_case (t.ex. button_press_count).
+* **Konstanter/Macros:** SCREAMING_SNAKE_CASE (t.ex. MAX_VOTES_PER_SESSION).
+* **Typer (Structs/Enums):** Slutar på _t (t.ex. vote_state_t).
 
 ### 3.2. Arkitektur: Separation av Logik och I/O
 För att uppfylla kravet på modularitet ska koden delas upp i tre lager:
-* Hårdvarulager (I/O): Hanterar Pico W-specifik kod (SDK-anrop, GPIO, Wi-Fi). Här tillåts printf och hårdvaruanrop.
-* Logiklager: Innehåller ren C-kod för beräkningar och tillstånd. Detta lager får inte inkludera pico/stdlib.h eller använda I/O.
-* Applikationslager (Main): Binder samman logik och hårdvara.
+* **Hårdvarulager (I/O):** Hanterar Pico W-specifik kod (SDK-anrop, GPIO, Wi-Fi). Här tillåts printf och hårdvaruanrop.
+* **Logiklager:** Innehåller ren C-kod för beräkningar och tillstånd. Detta lager får inte inkludera pico/stdlib.h eller använda I/O.
+* **Applikationslager (Main):** Binder samman logik och hårdvara.
 
 ### 3.3. Hantering av Data (Inga globala variabler)
 * Enligt policyn får globala variabler inte användas. All data ska kapslas in i structs och skickas som pekare.
@@ -54,14 +55,14 @@ void vote_process_input(vote_data_t *state, int input_type) {
 ```
 
 ### 3.4. Felhantering och Typer
-* Returkoder: Funktioner som kan misslyckas ska returnera en bool eller en enum för felstatus (t.ex. result_t), inte magiska siffror.
-* Standardtyper: Använd <stdint.h> för exakta bitbredder (t.ex. uint8_t, int32_t) istället för int eller char där storleken är kritisk.
-* Ingen GPL: Innan ett externt bibliotek inkluderas måste licensen kontrolleras (MIT, Apache eller BSD är godkända).
+* **Returkoder:** Funktioner som kan misslyckas ska returnera en bool eller en enum för felstatus (t.ex. result_t), inte magiska siffror.
+* **Standardtyper:** Använd <stdint.h> för exakta bitbredder (t.ex. uint8_t, int32_t) istället för int eller char där storleken är kritisk.
+* **Ingen GPL:** Innan ett externt bibliotek inkluderas måste licensen kontrolleras (MIT, Apache eller BSD är godkända).
 
 ### 3.5. Formatering (Style Guide)
-* Standard: C99 eller C11.
-* Måsvingar: Samma rad som if/while/for.
-* Kommentarer: * Doxygen-format (/** ... */) i headerfiler för att beskriva funktioners in- och utdata.
+* **Standard:** C99 eller C11.
+* **Måsvingar:** Samma rad som if/while/for.
+* **Kommentarer:** * Doxygen-format (/** ... */) i headerfiler för att beskriva funktioners in- och utdata.
 * "Varför" snarare än "Vad" i källkodsfiler.
 
 
