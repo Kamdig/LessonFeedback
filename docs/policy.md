@@ -79,8 +79,8 @@ För att sprida kunskap inom teamet (enligt krav för Sprint 1):
 
 ## 6. Enhetstester (Unit Testing)
 * Eftersom logiken är separerad från hårdvaran och vi skickar in structs, ska varje logikmodul ha en motsvarande testfil.
-*Testerna ska kunna köras på en vanlig dator (Host-based testing) utan att en Pico W är inkopplad.
-*Mocks: Om logiken behöver interagera med något externt, använd funktionspekare eller mock-objekt i din struct.
+* Testerna ska kunna köras på en vanlig dator (Host-based testing) utan att en Pico W är inkopplad.
+* Mocks: Om logiken behöver interagera med något externt, använd funktionspekare eller mock-objekt i din struct.
 
 ## 7. Definition of Done (DoD)
 Ett kort anses vara "Done" när:
