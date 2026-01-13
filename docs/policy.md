@@ -60,7 +60,6 @@ void vote_process_input(vote_data_t *state, int input_type) {
 
 ### 3.5. Formatering (Style Guide)
 * Standard: C99 eller C11.
-* Indentering: 4 mellanslag (inga tabs).
 * Måsvingar: Samma rad som if/while/for.
 * Kommentarer: * Doxygen-format (/** ... */) i headerfiler för att beskriva funktioners in- och utdata.
 * "Varför" snarare än "Vad" i källkodsfiler.
