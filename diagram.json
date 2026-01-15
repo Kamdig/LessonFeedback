@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-pi-pico",
+      "id": "pico",
+      "top": 25.65,
+      "left": 138,
+      "attrs": { "env": "arduino-community" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -214.4,
+      "left": 24.8,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 268.7,
+      "left": -82.9,
+      "rotate": 90,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": 268.7,
+      "left": -34.9,
+      "rotate": 90,
+      "attrs": { "color": "yellow", "xray": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn3",
+      "top": 268.7,
+      "left": 13.1,
+      "rotate": 90,
+      "attrs": { "color": "red", "xray": "1" }
+    }
+  ],
+  "connections": [
+    [ "pico:GP0", "$serialMonitor:RX", "", [] ],
+    [ "pico:GP1", "$serialMonitor:TX", "", [] ],
+    [ "pico:GND.1", "btn1:2.l", "black", [ "h0" ] ],
+    [ "pico:GND.1", "btn2:2.l", "black", [ "h0" ] ],
+    [ "pico:GND.1", "lcd1:VSS", "black", [ "h0" ] ],
+    [ "pico:GND.1", "lcd1:RW", "black", [ "h0" ] ],
+    [ "pico:GND.1", "lcd1:K", "black", [ "h0" ] ],
+    [ "pico:GND.1", "lcd1:GND", "black", [ "h0" ] ],
+    [ "pico:3V3", "lcd1:VCC", "green", [ "h0" ] ],
+    [ "pico:GP4", "lcd1:SDA", "green", [ "h0" ] ],
+    [ "pico:GP5", "lcd1:SCL", "green", [ "h0" ] ],
+    [ "pico:GP10", "btn1:1.l", "green", [ "h0" ] ],
+    [ "pico:GP11", "btn2:1.l", "green", [ "h0" ] ],
+    [ "pico:GP12", "btn3:1.l", "green", [ "h0" ] ],
+    [ "pico:GND.1", "btn3:2.l", "black", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
