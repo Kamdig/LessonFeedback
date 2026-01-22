@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include "vote_manager.h"
+#include "wifi_driver.h"
 
 static void print_results(VoteResults r) {
     printf("Current results:\n");
@@ -13,6 +14,13 @@ static void print_results(VoteResults r) {
 int main(void) {
     // Initiera (nollställ) alla röster
     vote_manager_init();
+    
+      if (!wifi_connect()) {
+        printf("WiFi kunde inte anslutas. Programmet fortsätter i offline-läge.\n");
+    } else {
+        printf("WiFi anslutet! Pico W är online.\n");
+    }
+
 
     printf("Vote counter\n");
     printf("Press R (Red), Y (Yellow), G (Green)\n");
