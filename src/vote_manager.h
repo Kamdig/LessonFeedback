@@ -1,27 +1,28 @@
-#ifndef VOTE_MANAGER_H
-#define VOTE_MANAGER_H
+#include "vote_manager.h"
 
-// Enum som representerar de olika röstfärgerna
-typedef enum {
-    VOTE_RED,
-    VOTE_YELLOW,
-    VOTE_GREEN
-} VoteType;
+static VoteResults results;
 
-// Struct som lagrar antalet röster för varje färg
-typedef struct {
-    int red;
-    int yellow;
-    int green;
-} VoteResults;
+void vote_manager_init(void) {
+    results.red = 0;
+    results.yellow = 0;
+    results.green = 0;
+}
 
-// Initierar (nollställer) alla räknare
-void vote_manager_init(void);
+void add_vote(VoteType color) {
+    switch (color) {
+        case VOTE_RED:
+            results.red++;
+            break;
+        case VOTE_YELLOW:
+            results.yellow++;
+            break;
+        case VOTE_GREEN:
+            results.green++;
+            break;
+    }
+}
 
-// Lägger till en röst av angiven färg
-void add_vote(VoteType color);
+VoteResults get_results(void) {
+    return results;
+}
 
-// Returnerar nuvarande röstresultat
-VoteResults get_results(void);
-
-#endif

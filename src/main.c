@@ -1,82 +1,62 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <ctype.h>
-#include "vote_manager.h"
 
-static void print_results(VoteResults r) {
-    printf("Current results:\n");
-    printf("  Red   : %d\n", r.red);
-    printf("  Yellow: %d\n", r.yellow);
-    printf("  Green : %d\n", r.green);
+#include <stdio.h>
+#include "pico/stdlib.h"
+#include "vote_manager.h"
+#include "wifi_driver.h"
+#include "button_driver.h"
+#include "lcd_driver.h"
+
+static void update_lcd(void) {
+    VoteResults r = get_results();
+    char buf[17];
+
+    lcd_driver_clear();
+
+    snprintf(buf, sizeof(buf), "R:%d Y:%d", r.red, r.yellow);
+    lcd_driver_set_cursor(0,0);
+    lcd_driver_print(buf);
+
+    snprintf(buf, sizeof(buf), "G:%d", r.green);
+    lcd_driver_set_cursor(0,1);
+    lcd_driver_print(buf);
 }
 
 int main(void) {
-    // Initiera (nollställ) alla röster
-    vote_manager_init();
+    stdio_init_all();
 
-    printf("Vote counter\n");
-    printf("Press R (Red), Y (Yellow), G (Green)\n");
-    printf("Press Q to exit.\n\n");
-
-    bool running = true;
-    char line[64];
-
-    while (running) {
-        printf("Your vote (R/Y/G/Q): ");
-
-        // Läs en rad från tangentbordet
-        if (fgets(line, sizeof(line), stdin) == NULL) {
-            // Om något går fel med inmatningen avslutar vi
-            printf("\nNo more input. Exiting.\n");
-            break;
-        }
-
-        // Ta första tecknet i raden
-        char c = line[0];
-
-        // Ignorera tom rad
-        if (c == '\n' || c == '\0') {
-            continue;
-        }
-
-        // Gör om till stor bokstav så både r och R fungerar
-        c = (char)toupper((unsigned char)c);
-
-        // Avsluta om användaren trycker Q
-        if (c == 'Q') {
-            running = false;
-            continue;
-        }
-
-        bool valid = true;
-
-        // Tolka vilken färg som valts
-        switch (c) {
-            case 'R':
-                add_vote(VOTE_RED);
-                break;
-
-            case 'Y':
-                add_vote(VOTE_YELLOW);
-                break;
-
-            case 'G':
-                add_vote(VOTE_GREEN);
-                break;
-
-            default:
-                printf("Ogiltig inmatning. Använd R, Y, G eller Q.\n");
-                valid = false;
-                break;
-        }
-
-        // Om rösten var giltig, skriv ut resultatet
-        if (valid) {
-            VoteResults results = get_results();
-            print_results(results);
-            printf("\n");
-        }
+    // WiFi
+    if (!wifi_driver_init()) {
+        printf("WiFi kunde inte anslutas. Offline-läge.\n");
+    } else {
+        printf("WiFi anslutet! Pico W är online.\n");
     }
 
-    return 0;
+    vote_manager_init();
+    button_driver_init();
+    lcd_driver_init();
+
+    printf("Vote counter (buttons + LCD)\n");
+
+    while (true) {
+        if (button_driver_was_pressed(BUTTON_RED)) {
+            add_vote(VOTE_RED);
+            printf("Red button pressed\n");
+            update_lcd();
+        }
+
+        if (button_driver_was_pressed(BUTTON_YELLOW)) {
+            add_vote(VOTE_YELLOW);
+            printf("Yellow button pressed\n");
+            update_lcd();
+        }
+
+        if (button_driver_was_pressed(BUTTON_GREEN)) {
+            add_vote(VOTE_GREEN);
+            printf("Green button pressed\n");
+            update_lcd();
+        }
+
+        sleep_ms(50); // enkel debounce
+    }
 }
+
