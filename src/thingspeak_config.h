@@ -1,8 +1,8 @@
 #ifndef THINGSPEAK_CONFIG_H
 #define THINGSPEAK_CONFIG_H 
 
-#define THINGSPEAK_API_KEY "OIZT8DWUBZULBXOE"
-#define THINGSPEAK_CHANNEL_ID "3235193" 
+#define THINGSPEAK_API_KEY "" // Lägg till API nyckeln här
+#define THINGSPEAK_CHANNEL_ID "" // Lägg till Kanalens ID här
 
 #define THINGSPEAK_HOST "api.thingspeak.com"
 #define THINGSPEAK_PORT 80
