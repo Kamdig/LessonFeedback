@@ -1,7 +1,6 @@
 #include "thingspeak_driver.h"
-#include "thingspeak_driver.c"
+#include "thingspeak_config.h"
 #include "wifi_driver.h"
-
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <stdbool.h>
@@ -29,7 +28,7 @@ bool send_vote_to_thingspeak(int lessonID, int voteValue)
         sizeof(path),
         "/update?api_key=%s&field1=%d&field2=%d",
         THINGSPEAK_API_KEY,
-        lessondID,
+        lessonID,
         voteValue
     );
 
