@@ -9,7 +9,7 @@
 #include "lwip/netdb.h"
 
 
-bool wifi_driver_init() {
+bool wifi_driver_init(void) {
     if (cyw43_arch_init()) {
         printf("WiFi init misslyckades\n");
         return false;
@@ -32,13 +32,13 @@ bool wifi_driver_init() {
     return true;
 }
 
-// GET HTTP
+// Skickar ett HTTP GET-anrop till host och path
 bool wifi_http_get(const char *host, const char *path)
-{    
+{    // Kontrollera att parametrarna inte är NULL
     if (host == NULL || path == NULL) {
         return false;
     }
-
+    // Bygg HTTP GET-request sträng
     char request[320];
     int written = snprintf(
         request,
@@ -50,25 +50,28 @@ bool wifi_http_get(const char *host, const char *path)
         path,
         host
     );
-
+    // Om strängen inte fick plats i bufferten
     if (written < 0 || written >= (int)sizeof(request)) {
         printf("[WiFi] ERROR: request too long\n");
         return false;
     
     }
 
-    // DNS lookup
-    struct addrinfo hints;
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
+    // Förbered inställningar för DNS-uppslagning (IPv4 + TCP)
+    struct addrinfo hints;             // skapa struct hints
+    memset(&hints, 0, sizeof(hints));  // Nollställ först så inget skräp ligger kvar sen innan
+    hints.ai_family = AF_INET;         // använd IPv4
+    hints.ai_socktype = SOCK_STREAM;   // använd TCP
     
-    struct addrinfo *res = NULL;
+    struct addrinfo *res = NULL; // pekare '*res' som ska peka på resultatet från DNS-uppslagningen
     
-    cyw43_arch_lwip_begin();
-    int err = getaddrinfo(host, "80", &hints, &res);
-    cyw43_arch_lwip_end();
-
+    // Genomför uppslagningen med ett lwIP-anrop
+    cyw43_arch_lwip_begin(); // Lås lwIP så att inte wifi_drivern använder den samtidigt
+    // Översätt host (i det här fallet api.thingspeak.com) till en IP-adress
+    int err = getaddrinfo(host, "80", &hints, &res); // Slå upp IP-adressen för host på port 80, använd bara IPv4 + TCP-adresser, och spara resultatet i res
+    cyw43_arch_lwip_end(); // Lås upp lwIP
+    
+    // Om getadrrinfo() inte returnerar 0 eller ett giltigt resultat i res avbryter vi
     if (err != 0 || res == NULL) {
         printf("[WiFi] ERROR: getaddrinfo failed (%d)\n", err);
         return false;
