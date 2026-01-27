@@ -1,28 +1,24 @@
-#include "vote_manager.h"
+#ifndef VOTE_MANAGER_H
+#define VOTE_MANAGER_H
 
-static VoteResults results;
+typedef enum {
+    VOTE_RED,
+    VOTE_YELLOW,
+    VOTE_GREEN
 
-void vote_manager_init(void) {
-    results.red = 0;
-    results.yellow = 0;
-    results.green = 0;
-}
+} VoteType;
 
-void add_vote(VoteType color) {
-    switch (color) {
-        case VOTE_RED:
-            results.red++;
-            break;
-        case VOTE_YELLOW:
-            results.yellow++;
-            break;
-        case VOTE_GREEN:
-            results.green++;
-            break;
-    }
-}
+typedef struct {
+    int red;
+    int yellow;
+    int green;
 
-VoteResults get_results(void) {
-    return results;
-}
+} VoteResults;
+
+void vote_manager_init(void);
+void add_vote(Votetype color);
+VoteResults get_results(void);
+
+#endif
+
 
