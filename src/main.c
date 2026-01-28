@@ -23,7 +23,7 @@ static void update_lcd(void) {
     lcd_driver_print(buf);
 }
 // Skapar en funktion som lagrar rösten och skickar sedan direkt till molnet
-static void handle_vote(int voteValue) {
+static void handle_vote(VoteType voteValue) {
    
     // Spara rösten lokalt
     add_vote(voteValue);
