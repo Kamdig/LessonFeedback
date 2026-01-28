@@ -1,9 +1,9 @@
-#ifndef WIFI_DRIVER_H
-#define WIFI_DRIVER_H
-
+#pragma once
 #include <stdbool.h>
 
-bool wifi_connect(void);
+bool wifi_driver_init(void);
 
-#endif
+// HTTP GET (host and path), return as true if the request was sent as ok
+
+bool wifi_http_get(const char *host, const char *path);
 

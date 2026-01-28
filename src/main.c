@@ -1,90 +1,78 @@
 #include <stdio.h>
-#include <stdbool.h>
-#include <ctype.h>
+#include "pico/stdlib.h"
 #include "vote_manager.h"
 #include "wifi_driver.h"
+#include "button_driver.h"
+#include "lcd_driver.h"
+#include "thingspeak_driver.h"
 
-static void print_results(VoteResults r) {
-    printf("Current results:\n");
-    printf("  Red   : %d\n", r.red);
-    printf("  Yellow: %d\n", r.yellow);
-    printf("  Green : %d\n", r.green);
+#define LESSON_ID 1 // Välj ID för lektionen
+
+static void update_lcd(void) {
+    VoteResults r = get_results();
+    char buf[17];
+
+    lcd_driver_clear();
+
+    snprintf(buf, sizeof(buf), "R:%d Y:%d", r.red, r.yellow);
+    lcd_driver_set_cursor(0,0);
+    lcd_driver_print(buf);
+
+    snprintf(buf, sizeof(buf), "G:%d", r.green);
+    lcd_driver_set_cursor(0,1);
+    lcd_driver_print(buf);
+}
+// Skapar en funktion som lagrar rösten och skickar sedan direkt till molnet
+static void handle_vote(VoteType voteValue) {
+   
+    // Spara rösten lokalt
+    add_vote(voteValue);
+
+    // Skicka den vidare tillsammans med lektions ID till ThingSpeak 
+    (void)send_vote_to_thingspeak(LESSON_ID, voteValue);
+    
+    // Skriv ut meddelande och uppdatera LCD:n
+    printf("Tack för din röst\n");
+    update_lcd();
+
 }
 
 int main(void) {
-    // Initiera (nollställ) alla röster
-    vote_manager_init();
-    
-      if (!wifi_connect()) {
-        printf("WiFi kunde inte anslutas. Programmet fortsätter i offline-läge.\n");
+    stdio_init_all();
+
+    // Innan vi anropar funktionerna
+    // Anslut Pico W till WiFi
+    if (!wifi_driver_init()) {
+        printf("WiFi kunde inte anslutas. Offline-läge.\n");
     } else {
         printf("WiFi anslutet! Pico W är online.\n");
     }
+    // initiera funktioner för rösthantering, knappar och LCD
+    vote_manager_init();
+    button_driver_init();
+    lcd_driver_init();
 
+    printf("Vote counter (buttons + LCD)\n");
 
-    printf("Vote counter\n");
-    printf("Press R (Red), Y (Yellow), G (Green)\n");
-    printf("Press Q to exit.\n\n");
-
-    bool running = true;
-    char line[64];
-
-    while (running) {
-        printf("Your vote (R/Y/G/Q): ");
-
-        // Läs en rad från tangentbordet
-        if (fgets(line, sizeof(line), stdin) == NULL) {
-            // Om något går fel med inmatningen avslutar vi
-            printf("\nNo more input. Exiting.\n");
-            break;
+    while (true) {
+        if (button_driver_was_pressed(BUTTON_RED)) {
+            handle_vote(VOTE_RED);
+            printf("Red button pressed\n");
         }
 
-        // Ta första tecknet i raden
-        char c = line[0];
-
-        // Ignorera tom rad
-        if (c == '\n' || c == '\0') {
-            continue;
+        if (button_driver_was_pressed(BUTTON_YELLOW)) {
+            handle_vote(VOTE_YELLOW);
+            printf("Yellow button pressed\n");
         }
 
-        // Gör om till stor bokstav så både r och R fungerar
-        c = (char)toupper((unsigned char)c);
-
-        // Avsluta om användaren trycker Q
-        if (c == 'Q') {
-            running = false;
-            continue;
+        if (button_driver_was_pressed(BUTTON_GREEN)) {
+            handle_vote(VOTE_GREEN);
+            printf("Green button pressed\n");
         }
-
-        bool valid = true;
-
-        // Tolka vilken färg som valts
-        switch (c) {
-            case 'R':
-                add_vote(VOTE_RED);
-                break;
-
-            case 'Y':
-                add_vote(VOTE_YELLOW);
-                break;
-
-            case 'G':
-                add_vote(VOTE_GREEN);
-                break;
-
-            default:
-                printf("Ogiltig inmatning. Använd R, Y, G eller Q.\n");
-                valid = false;
-                break;
-        }
-
-        // Om rösten var giltig, skriv ut resultatet
-        if (valid) {
-            VoteResults results = get_results();
-            print_results(results);
-            printf("\n");
-        }
+     
+        // förhindra att flera röster registreras vid ett knapptryck
+        sleep_ms(50); 
     }
 
-    return 0;
 }
+
