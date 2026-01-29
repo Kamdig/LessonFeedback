@@ -25,4 +25,3 @@ void add_vote(VoteType color) {
 VoteResults get_results(void) {
     return results;
 }
-

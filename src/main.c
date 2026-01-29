@@ -5,6 +5,8 @@
 #include "button_driver.h"
 #include "lcd_driver.h"
 #include "thingspeak_driver.h"
+#include "pico/cyw43_arch.h"
+
 
 #define LESSON_ID 1 // Välj ID för lektionen
 
@@ -40,14 +42,13 @@ static void handle_vote(VoteType voteValue) {
 int main(void) {
     stdio_init_all();
 
-    // Innan vi anropar funktionerna
-    // Anslut Pico W till WiFi
-    if (!wifi_driver_init()) {
+    bool wifi_ok = wifi_driver_init();
+    if (!wifi_ok) {
         printf("WiFi kunde inte anslutas. Offline-läge.\n");
     } else {
         printf("WiFi anslutet! Pico W är online.\n");
     }
-    // initiera funktioner för rösthantering, knappar och LCD
+
     vote_manager_init();
     button_driver_init();
     lcd_driver_init();
@@ -55,24 +56,23 @@ int main(void) {
     printf("Vote counter (buttons + LCD)\n");
 
     while (true) {
+        if (wifi_ok) {
+            cyw43_arch_poll();   // <-- required for lwip_poll
+        }
+
         if (button_driver_was_pressed(BUTTON_RED)) {
             handle_vote(VOTE_RED);
             printf("Red button pressed\n");
         }
-
         if (button_driver_was_pressed(BUTTON_YELLOW)) {
             handle_vote(VOTE_YELLOW);
             printf("Yellow button pressed\n");
         }
-
         if (button_driver_was_pressed(BUTTON_GREEN)) {
             handle_vote(VOTE_GREEN);
             printf("Green button pressed\n");
         }
-     
-        // förhindra att flera röster registreras vid ett knapptryck
-        sleep_ms(50); 
+
+        sleep_ms(50);
     }
-
 }
-

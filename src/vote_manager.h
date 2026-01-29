@@ -16,9 +16,7 @@ typedef struct {
 } VoteResults;
 
 void vote_manager_init(void);
-void add_vote(Votetype color);
+void add_vote(VoteType color);
 VoteResults get_results(void);
 
 #endif
-
-

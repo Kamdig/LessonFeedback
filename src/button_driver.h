@@ -9,4 +9,3 @@ typedef enum {
 
 void button_driver_init(void);
 bool button_driver_was_pressed(button_t button);
-

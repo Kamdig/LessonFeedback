@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+board = "pico_w"
+firmware = "build/wokwi_project.uf2"
+elf = "build/wokwi_project.elf"
